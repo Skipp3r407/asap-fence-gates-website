@@ -71,7 +71,7 @@ export default function ServiceAreasPage() {
               "Charlotte County, Punta Gorda, and Port Charlotte properties often need practical privacy, storm-conscious materials, and access planning.",
               "Orlando-area and commercial projects may involve larger runs, access control, temporary fencing, scheduling, and contractor coordination."
             ].map((item) => (
-              <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100" key={item}>
+              <div className="interactive-card rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100" key={item}>
                 <MapPin className="h-6 w-6 text-[#f59f22]" />
                 <p className="mt-4 text-sm font-bold leading-7 text-slate-700">{item}</p>
               </div>

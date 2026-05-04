@@ -67,6 +67,29 @@ button[class*="bg-[#071427]"] * {
   }
 }
 
+@media (hover: hover) and (pointer: fine) {
+  main article,
+  main .interactive-card,
+  main a[class*="rounded-"],
+  main button[class*="rounded-"] {
+    transform-origin: center;
+    transition-duration: 220ms;
+    transition-property: transform, box-shadow, border-color, background-color, color;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  main article:hover,
+  main .interactive-card:hover {
+    transform: translateY(-6px) scale(1.035);
+    box-shadow: 0 24px 60px rgba(8, 17, 31, 0.14);
+  }
+
+  main a[class*="rounded-"]:hover,
+  main button[class*="rounded-"]:hover {
+    transform: translateY(-2px) scale(1.035);
+  }
+}
+
 button,
 input,
 textarea,
