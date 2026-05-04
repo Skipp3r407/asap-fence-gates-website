@@ -119,6 +119,11 @@ type ProjectGalleryItem = {
   projectType: string;
   products: string[];
   photoCount: number;
+  photos?: string[];
+  description?: string;
+  reviewerName?: string;
+  reviewRating?: string;
+  reviewBody?: string;
 };
 
 const projectImageFallbacks = [
@@ -129,6 +134,90 @@ const projectImageFallbacks = [
   "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=90",
   "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=90"
 ];
+
+function GalleryFilterDropdown({
+  label,
+  options,
+  value,
+  isOpen,
+  onChange,
+  onClose,
+  onToggle
+}: {
+  label: string;
+  options: string[];
+  value: string;
+  isOpen: boolean;
+  onChange: (value: string) => void;
+  onClose: () => void;
+  onToggle: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const filteredOptions = options.filter((option) => option.toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div className="relative">
+      <button
+        className={`inline-flex min-w-36 items-center justify-center rounded-full border px-6 py-3 text-sm font-black transition ${
+          value !== "All" || isOpen
+            ? "border-[#071427] bg-white text-[#071427] shadow-sm"
+            : "border-slate-300 bg-white text-[#071427] hover:border-[#f59f22]"
+        }`}
+        onClick={onToggle}
+        type="button"
+      >
+        {label}
+      </button>
+      {isOpen ? (
+        <div className="absolute left-0 top-full z-30 mt-3 w-[min(86vw,360px)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-blue-950/20">
+          <input
+            className="w-full border-b border-slate-200 px-4 py-4 font-semibold text-[#071427] outline-none placeholder:text-slate-500"
+            placeholder="Search..."
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          <div className="max-h-80 overflow-y-auto py-2">
+            {filteredOptions.map((option) => (
+              <button
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-left font-semibold text-[#071427] transition hover:bg-amber-50"
+                key={option}
+                onClick={() => onChange(option)}
+                type="button"
+              >
+                <span
+                  className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border ${
+                    value === option ? "border-[#071427] bg-[#071427]" : "border-slate-300"
+                  }`}
+                >
+                  {value === option ? <span className="h-2.5 w-2.5 rounded-full bg-[#f59f22]" /> : null}
+                </span>
+                {option}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between border-t border-slate-200 p-4">
+            <button
+              className="font-semibold text-slate-600 transition hover:text-[#f59f22]"
+              onClick={() => {
+                onChange("All");
+                setQuery("");
+              }}
+              type="button"
+            >
+              Clear
+            </button>
+            <button className="font-semibold text-slate-600 transition hover:text-[#f59f22]" onClick={onClose} type="button">
+              Cancel
+            </button>
+            <button className="rounded-full bg-[#071427] px-6 py-3 font-black text-white transition hover:bg-[#f59f22] hover:text-[#071427]" onClick={onClose} type="button">
+              Save
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 export function HomePage() {
   return (
@@ -582,9 +671,13 @@ export function ProcessSection() {
 
 export function GalleryPreview() {
   const [active, setActive] = useState<ProjectGalleryItem | null>(null);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [projects, setProjects] = useState<ProjectGalleryItem[]>([]);
   const [failedProjectImages, setFailedProjectImages] = useState<Set<string>>(new Set());
-  const [activeType, setActiveType] = useState("All Projects");
+  const [activeType, setActiveType] = useState("All");
+  const [activeProduct, setActiveProduct] = useState("All");
+  const [activeCity, setActiveCity] = useState("All");
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(18);
   const [galleryStatus, setGalleryStatus] = useState("Loading recent CompanyCam projects...");
 
@@ -597,9 +690,11 @@ export function GalleryPreview() {
         const data = (await response.json()) as {
           projects?: ProjectGalleryItem[];
           totalProjects?: number;
+          totalImages?: number;
           updatedAt?: string;
           imageMode?: string;
-          featuredPhotoCount?: number;
+          actualPhotoCount?: number;
+          showcaseProjectCount?: number;
         };
 
         if (!mounted) {
@@ -610,7 +705,7 @@ export function GalleryPreview() {
           setProjects(data.projects);
           setGalleryStatus(
             data.imageMode === "actual-project-photos"
-              ? `Showing ${data.featuredPhotoCount ?? 0} actual Trusty project photos, plus ${Math.max((data.totalProjects ?? data.projects.length) - (data.featuredPhotoCount ?? 0), 0)} public ASAP Fence & Gates project cards.`
+              ? `Showing ${data.showcaseProjectCount ?? data.projects.length} detailed public showcase projects with ${data.actualPhotoCount ?? data.totalImages ?? 0} real ASAP Fence & Gates project photos.`
               : `Showing ${data.totalProjects ?? data.projects.length} public ASAP Fence & Gates projects with verified royalty-free image fallbacks.`
           );
         } else {
@@ -630,19 +725,30 @@ export function GalleryPreview() {
     };
   }, []);
 
-  const projectTypes = useMemo(
-    () => ["All Projects", ...Array.from(new Set(projects.map((project) => project.projectType))).slice(0, 7)],
+  const projectTypes = useMemo(() => ["All", ...Array.from(new Set(projects.map((project) => project.projectType))).sort()], [projects]);
+  const projectProducts = useMemo(
+    () => ["All", ...Array.from(new Set(projects.flatMap((project) => project.products))).sort()],
     [projects]
   );
+  const projectCities = useMemo(() => ["All", ...Array.from(new Set(projects.map((project) => project.city))).sort()], [projects]);
 
   const filteredProjects = useMemo(
-    () => projects.filter((project) => activeType === "All Projects" || project.projectType === activeType),
-    [activeType, projects]
+    () =>
+      projects.filter((project) => {
+        const typeMatches = activeType === "All" || project.projectType === activeType;
+        const productMatches = activeProduct === "All" || project.products.includes(activeProduct);
+        const cityMatches = activeCity === "All" || project.city === activeCity;
+
+        return typeMatches && productMatches && cityMatches;
+      }),
+    [activeCity, activeProduct, activeType, projects]
   );
 
   const visibleProjects = filteredProjects.slice(0, visibleCount);
   const getProjectImage = (project: ProjectGalleryItem, index: number) =>
     failedProjectImages.has(project.id) ? projectImageFallbacks[index % projectImageFallbacks.length] : project.image;
+  const activePhotos = active?.photos?.length ? active.photos : active ? [active.image] : [];
+  const activePhoto = activePhotos[activePhotoIndex] ?? active?.image ?? projectImageFallbacks[0];
 
   return (
     <section className="bg-white py-16">
@@ -660,24 +766,66 @@ export function GalleryPreview() {
         <p className="mt-5 rounded-full bg-amber-50 px-4 py-2 text-sm font-bold text-[#071427] ring-1 ring-amber-100">
           {galleryStatus}
         </p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {projectTypes.map((type) => (
+        <div className="mt-6 flex flex-wrap gap-3">
+          <GalleryFilterDropdown
+            label="Project Type"
+            options={projectTypes}
+            value={activeType}
+            isOpen={openFilter === "type"}
+            onChange={(value) => {
+              setActiveType(value);
+              setVisibleCount(18);
+            }}
+            onClose={() => setOpenFilter(null)}
+            onToggle={() => setOpenFilter(openFilter === "type" ? null : "type")}
+          />
+          <GalleryFilterDropdown
+            label="Products Used"
+            options={projectProducts}
+            value={activeProduct}
+            isOpen={openFilter === "product"}
+            onChange={(value) => {
+              setActiveProduct(value);
+              setVisibleCount(18);
+            }}
+            onClose={() => setOpenFilter(null)}
+            onToggle={() => setOpenFilter(openFilter === "product" ? null : "product")}
+          />
+          <GalleryFilterDropdown
+            label="City & State"
+            options={projectCities}
+            value={activeCity}
+            isOpen={openFilter === "city"}
+            onChange={(value) => {
+              setActiveCity(value);
+              setVisibleCount(18);
+            }}
+            onClose={() => setOpenFilter(null)}
+            onToggle={() => setOpenFilter(openFilter === "city" ? null : "city")}
+          />
+        </div>
+        {activeType !== "All" || activeProduct !== "All" || activeCity !== "All" ? (
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-sm font-bold text-slate-600">
+            <span>Active filters:</span>
+            {[activeType, activeProduct, activeCity].filter((filter) => filter !== "All").map((filter) => (
+              <span className="rounded-full bg-[#f59f22] px-3 py-1 text-[#071427]" key={filter}>
+                {filter}
+              </span>
+            ))}
             <button
-              className={`rounded-full px-4 py-2 text-sm font-black transition ${
-                activeType === type
-                  ? "bg-[#f59f22] text-[#071427]"
-                  : "bg-slate-100 text-slate-700 hover:bg-[#f59f22] hover:text-[#071427]"
-              }`}
-              key={type}
+              className="rounded-full bg-slate-100 px-3 py-1 font-black text-[#0b3b75] transition hover:bg-[#071427] hover:text-white"
               onClick={() => {
-                setActiveType(type);
+                setActiveType("All");
+                setActiveProduct("All");
+                setActiveCity("All");
                 setVisibleCount(18);
               }}
+              type="button"
             >
-              {type}
+              Clear all
             </button>
-          ))}
-        </div>
+          </div>
+        ) : null}
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {visibleProjects.map((project, index) => (
             <button
@@ -685,7 +833,10 @@ export function GalleryPreview() {
                 index === 0 ? "lg:col-span-2" : ""
               }`}
               key={project.id}
-              onClick={() => setActive(project)}
+              onClick={() => {
+                setActive(project);
+                setActivePhotoIndex(0);
+              }}
             >
               <span className="relative block h-72 overflow-hidden bg-slate-900">
                 <Image
@@ -731,10 +882,36 @@ export function GalleryPreview() {
                     </span>
                   ))}
                 </span>
+                {project.photos?.length ? (
+                  <span className="mt-4 flex items-center gap-2">
+                    {project.photos.slice(0, 4).map((photo, photoIndex) => (
+                      <span className="relative h-10 w-12 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200" key={`${project.id}-thumb-${photoIndex}`}>
+                        <Image
+                          src={photo}
+                          alt={`${project.title} thumbnail ${photoIndex + 1}`}
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      </span>
+                    ))}
+                    {project.photoCount > 4 ? (
+                      <span className="grid h-10 min-w-12 place-items-center rounded-lg bg-[#071427] px-2 text-xs font-black text-white">
+                        +{project.photoCount - 4}
+                      </span>
+                    ) : null}
+                  </span>
+                ) : null}
               </span>
             </button>
           ))}
         </div>
+        {!visibleProjects.length ? (
+          <div className="mt-10 rounded-[2rem] border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            <p className="text-2xl font-black text-[#071427]">No projects match those filters yet.</p>
+            <p className="mt-2 font-semibold text-slate-600">Clear one filter or choose another project type, product, or city.</p>
+          </div>
+        ) : null}
         {visibleCount < filteredProjects.length ? (
           <div className="mt-10 text-center">
             <button
@@ -755,7 +932,7 @@ export function GalleryPreview() {
             <motion.div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] bg-white lg:grid-cols-[1fr_0.42fr]" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}>
               <div className="relative h-[72vh] min-h-[420px] bg-slate-900">
                 <Image
-                  src={failedProjectImages.has(active.id) ? projectImageFallbacks[0] : active.image}
+                  src={failedProjectImages.has(active.id) ? projectImageFallbacks[0] : activePhoto}
                   alt={active.title}
                   fill
                   sizes="90vw"
@@ -772,6 +949,32 @@ export function GalleryPreview() {
                   <MapPin className="h-4 w-4 text-[#f59f22]" />
                   {active.city} · {active.date}
                 </p>
+                {active.description ? (
+                  <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-700">
+                    {active.description}
+                  </p>
+                ) : null}
+                {activePhotos.length > 1 ? (
+                  <div className="mt-5 grid grid-cols-4 gap-2">
+                    {activePhotos.slice(0, 12).map((photo, photoIndex) => (
+                      <button
+                        className={`relative h-16 overflow-hidden rounded-xl bg-slate-100 ring-2 ${
+                          activePhotoIndex === photoIndex ? "ring-[#f59f22]" : "ring-transparent"
+                        }`}
+                        key={`${active.id}-modal-thumb-${photoIndex}`}
+                        onClick={() => setActivePhotoIndex(photoIndex)}
+                      >
+                        <Image
+                          src={photo}
+                          alt={`${active.title} project photo ${photoIndex + 1}`}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
                 <div className="mt-6">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Products Used</p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -782,6 +985,15 @@ export function GalleryPreview() {
                     ))}
                   </div>
                 </div>
+                {active.reviewBody ? (
+                  <blockquote className="mt-6 rounded-2xl bg-[#071427] p-4 text-sm font-bold leading-6 text-white">
+                    <span className="block text-[#f59f22]">
+                      {active.reviewRating ? `${active.reviewRating}-star project review` : "Project review"}
+                    </span>
+                    &quot;{active.reviewBody}&quot;
+                    {active.reviewerName ? <span className="mt-2 block text-white/70">- {active.reviewerName}</span> : null}
+                  </blockquote>
+                ) : null}
                 <a className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#0b3b75] px-5 py-3 font-black text-white" href={active.href} target="_blank" rel="noreferrer">
                   Open Public Project <ExternalLink className="h-4 w-4" />
                 </a>
@@ -875,8 +1087,8 @@ export function OnlineReviewsSection() {
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <SectionHeading
             eyebrow="Public Review Highlights"
-            title="What customers mention online."
-            text="Review content is summarized from public web listings and search snippets, then presented as conversion-focused trust signals without inventing named customer quotes."
+            title="4.5-star rating from 249 published Google reviews."
+            text="Review snippets are pulled from the published ASAP Fence & Gates gallery/review page and presented as conversion-focused trust signals."
           />
           <a
             className="inline-flex items-center gap-2 rounded-full bg-[#0b3b75] px-5 py-3 font-black text-white [&_*]:text-white"
@@ -890,6 +1102,15 @@ export function OnlineReviewsSection() {
         <p className="mt-5 rounded-full bg-amber-50 px-4 py-2 text-sm font-bold text-[#071427] ring-1 ring-amber-100">
           {reviewStatus}
         </p>
+        <div className="mt-6 inline-flex flex-wrap items-center gap-3 rounded-[1.5rem] bg-[#071427] px-5 py-4 text-white shadow-xl shadow-blue-950/15">
+          <span className="text-3xl font-black text-[#f59f22]">4.5</span>
+          <span className="flex gap-1 text-[#f59f22]">
+            {Array.from({ length: 5 }).map((_, starIndex) => (
+              <Star className="h-5 w-5 fill-current" key={starIndex} />
+            ))}
+          </span>
+          <span className="text-sm font-black uppercase tracking-[0.16em] text-white">249 reviews</span>
+        </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
           {reviews.map((review) => (
             <button

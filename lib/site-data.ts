@@ -329,34 +329,60 @@ export const testimonials = [
 
 export const onlineReviewHighlights = [
   {
-    source: "Google review themes",
+    source: "Google review from ASAP gallery page",
     rating: "5-star feedback",
-    title: "Professional installation",
-    text: "Public review summaries consistently mention professional fence installation, friendly crews, and clean project communication."
+    title: "Review from Pete Sigler",
+    text: "Keke was the specific installer with ASAP Fence, really professional, kept me informed of his progress, and was very friendly.",
+    author: "Pete Sigler",
+    relativeTime: "3 years ago"
   },
   {
-    source: "Google review themes",
+    source: "Google review from ASAP gallery page",
     rating: "5-star feedback",
-    title: "Fast responses and fair pricing",
-    text: "Customers frequently praise fast service, competitive pricing, timely scheduling, and a smooth estimate-to-installation experience."
+    title: "Review from Thomas Jubeck",
+    text: "Speedy process from day one of the quote to delivery in half the amount of time of competitors. Happy with my fence.",
+    author: "Thomas Jubeck",
+    relativeTime: "2 years ago"
   },
   {
-    source: "Public listing themes",
-    rating: "Mixed across platforms",
-    title: "Helpful project updates",
-    text: "Review summaries mention progress photos, follow-up, and installers who keep customers informed during the job."
+    source: "Google review from ASAP gallery page",
+    rating: "5-star feedback",
+    title: "Review from Michael Rosario",
+    text: "Justin was awesome as an estimator, took time to answer all questions, provided photos of the process, and kept the customer up to date.",
+    author: "Michael Rosario",
+    relativeTime: "3 years ago"
   },
   {
-    source: "BBB public listing",
-    rating: "A rating listed",
-    title: "Established local business",
-    text: "Public business listings identify ASAP Fence & Gates as a Bradenton fence contractor with service history dating back to 2019."
+    source: "Google review from ASAP gallery page",
+    rating: "5-star feedback",
+    title: "Review from Robert Brindisi",
+    text: "Fence came out great and installation was ahead of schedule. Smooth transaction all around and would recommend the company.",
+    author: "Robert Brindisi",
+    relativeTime: "3 years ago"
   },
   {
-    source: "Facebook public profile",
-    rating: "78% recommend",
-    title: "Verified fence & gate contractor",
-    text: "The Facebook About page lists ASAP Fence & Gates as a verified Fence & Gate Contractor with 553 followers, 33 reviews, and a $$ price range."
+    source: "Google review from ASAP gallery page",
+    rating: "5-star feedback",
+    title: "Review from John Bastidas",
+    text: "Fair price, professionalism, and timeliness for fencing needs. The customer said they could not be happier.",
+    author: "John Bastidas",
+    relativeTime: "4 years ago"
+  },
+  {
+    source: "Google review from ASAP gallery page",
+    rating: "5-star feedback",
+    title: "Review from James Trotter",
+    text: "Quality service and very responsive service for vinyl fence installation.",
+    author: "James Trotter",
+    relativeTime: "4 years ago"
+  },
+  {
+    source: "Google review from ASAP gallery page",
+    rating: "5-star feedback",
+    title: "Review from Tessie Ross",
+    text: "Would recommend to any and everyone for wood fence installation.",
+    author: "Tessie Ross",
+    relativeTime: "4 years ago"
   }
 ];
 

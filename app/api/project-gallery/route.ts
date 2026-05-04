@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 const TRUSTY_PORTFOLIO_URL = "https://trusty.app/companies/asap-fence-gates-llc";
+const ASAP_SHOWCASES_URL = "https://asapfenceinstallations.com/showcases";
 const DURAFENCE_PROJECT_URL = `${TRUSTY_PORTFOLIO_URL}/durafence-installation-with-estate-gate`;
 const LAKEWOOD_ALUMINUM_PROJECT_URL = `${TRUSTY_PORTFOLIO_URL}/3-rail-black-aluminum-in-lakewood-ranches`;
 const MONTHS =
@@ -36,6 +37,28 @@ type Project = {
   projectType: string;
   products: string[];
   photoCount: number;
+  photos: string[];
+  description?: string;
+  reviewerName?: string;
+  reviewRating?: string;
+  reviewBody?: string;
+};
+
+type ShowcaseProject = {
+  id?: string;
+  url_slug?: string;
+  project_date?: string;
+  reviewer_name?: string;
+  review_rating?: string;
+  review_body?: string;
+  title?: string;
+  subtitle?: string;
+  formatted_location?: string;
+  location?: string;
+  photos?: string[];
+  featured_photo?: string;
+  detailed_description?: string;
+  service?: string;
 };
 
 const companyCamFallbackImages = [
@@ -66,7 +89,8 @@ const fallbackProjects: Project[] = [
     city: "Bradenton, FL",
     projectType: "Estate Gates Installation",
     products: ["Durafence", "Durafence Installation", "Estate Gates Installation"],
-    photoCount: 12
+    photoCount: 12,
+    photos: [companyCamFallbackImages[0]]
   },
   {
     id: "3-rail-black-aluminum-in-lakewood-ranches",
@@ -78,7 +102,8 @@ const fallbackProjects: Project[] = [
     city: "Bradenton, FL",
     projectType: "Aluminum Fence Installation",
     products: ["3 Rail Aluminum Fence", "Aluminum Fence Installation"],
-    photoCount: 12
+    photoCount: 12,
+    photos: [companyCamFallbackImages[1]]
   },
   {
     id: "vinyl-privacy-fence-installation-bradenton",
@@ -90,7 +115,8 @@ const fallbackProjects: Project[] = [
     city: "Bradenton, FL",
     projectType: "Vinyl Fence Installation",
     products: ["Vinyl Privacy Fence", "White Vinyl Fence", "Privacy Fencing"],
-    photoCount: 8
+    photoCount: 8,
+    photos: [royaltyFreeFallbackImages[1]]
   },
   {
     id: "pool-aluminum-fence-sarasota",
@@ -102,7 +128,8 @@ const fallbackProjects: Project[] = [
     city: "Sarasota, FL",
     projectType: "Aluminum Fence Installation",
     products: ["Aluminum Fence", "Pool Fencing", "Residential Fence"],
-    photoCount: 7
+    photoCount: 7,
+    photos: [royaltyFreeFallbackImages[0]]
   },
   {
     id: "wood-privacy-fence-venice",
@@ -114,7 +141,8 @@ const fallbackProjects: Project[] = [
     city: "Venice, FL",
     projectType: "Wood Fence Installation",
     products: ["Wood Privacy Fence", "Backyard Fencing", "Gate Layout"],
-    photoCount: 9
+    photoCount: 9,
+    photos: [royaltyFreeFallbackImages[3]]
   },
   {
     id: "commercial-chain-link-fence",
@@ -126,44 +154,51 @@ const fallbackProjects: Project[] = [
     city: "Orlando Area",
     projectType: "Chain-link Fence Installation",
     products: ["Chain-link Fence", "Commercial Security", "Access Planning"],
-    photoCount: 10
+    photoCount: 10,
+    photos: [royaltyFreeFallbackImages[5]]
   }
 ];
 
 export async function GET() {
   try {
-    const [portfolioHtml, ...featuredProjectHtml] = await Promise.all([
-      fetchTrustyPage(TRUSTY_PORTFOLIO_URL),
+    const [showcaseHtml, portfolioHtml, ...featuredProjectHtml] = await Promise.all([
+      fetchPage(ASAP_SHOWCASES_URL),
+      fetchPage(TRUSTY_PORTFOLIO_URL),
       ...featuredTrustyProjects.map((project) => fetchTrustyPage(project.url))
     ]);
 
+    const showcaseProjects = extractShowcaseProjects(showcaseHtml);
     const featuredSlugs = new Set(featuredTrustyProjects.map((project) => project.slug));
     const projects = extractProjects(portfolioHtml).filter((project) => !featuredSlugs.has(project.id));
     const portfolioImages = extractImages(portfolioHtml);
-    const featuredGalleries = featuredProjectHtml.flatMap((html, index) =>
+    const featuredGalleries = featuredProjectHtml.map((html, index) =>
       createFeaturedProjectGallery(featuredTrustyProjects[index], extractImages(html))
     );
-    const featuredPhotoCount = featuredGalleries.length;
-    const hydratedProjects = projects.slice(0, 164 - featuredPhotoCount).map((project, index) => ({
+    const actualPhotoCount =
+      showcaseProjects.reduce((total, project) => total + project.photoCount, 0) +
+      featuredGalleries.reduce((total, project) => total + project.photoCount, 0);
+    const hydratedProjects = projects.slice(0, Math.max(0, 164 - showcaseProjects.length - featuredGalleries.length)).map((project, index) => ({
       ...project,
       image: portfolioImages.length ? portfolioImages[index % portfolioImages.length] : getRoyaltyFreeImage(project.projectType, index),
-      imageSource: portfolioImages.length ? "Actual public CompanyCam project photo" : "Royalty-free fallback inspiration"
+      imageSource: portfolioImages.length ? "Actual public CompanyCam project photo" : "Royalty-free fallback inspiration",
+      photos: portfolioImages.length ? [portfolioImages[index % portfolioImages.length]] : [getRoyaltyFreeImage(project.projectType, index)]
     }));
-    const galleryProjects = [...featuredGalleries, ...hydratedProjects];
+    const galleryProjects = [...showcaseProjects, ...featuredGalleries, ...hydratedProjects];
 
     return NextResponse.json({
-      source: TRUSTY_PORTFOLIO_URL,
-      featuredSources: featuredTrustyProjects.map((project) => project.url),
+      source: ASAP_SHOWCASES_URL,
+      featuredSources: [ASAP_SHOWCASES_URL, ...featuredTrustyProjects.map((project) => project.url)],
       updatedAt: new Date().toISOString(),
       totalProjects: galleryProjects.length || fallbackProjects.length,
-      totalImages: featuredPhotoCount + portfolioImages.length || royaltyFreeFallbackImages.length,
-      featuredPhotoCount,
-      imageMode: featuredPhotoCount || portfolioImages.length ? "actual-project-photos" : "royalty-free-fallbacks",
+      totalImages: actualPhotoCount + portfolioImages.length || royaltyFreeFallbackImages.length,
+      actualPhotoCount,
+      showcaseProjectCount: showcaseProjects.length,
+      imageMode: actualPhotoCount || portfolioImages.length ? "actual-project-photos" : "royalty-free-fallbacks",
       projects: galleryProjects.length ? galleryProjects : fallbackProjects
     });
   } catch {
     return NextResponse.json({
-      source: TRUSTY_PORTFOLIO_URL,
+      source: ASAP_SHOWCASES_URL,
       updatedAt: new Date().toISOString(),
       totalProjects: fallbackProjects.length,
       totalImages: royaltyFreeFallbackImages.length,
@@ -173,27 +208,77 @@ export async function GET() {
   }
 }
 
-function fetchTrustyPage(url: string) {
+function fetchPage(url: string) {
   return fetch(url, {
+    headers: {
+      "user-agent": "Mozilla/5.0"
+    },
     next: {
       revalidate: 3600
     }
   }).then((response) => response.text());
 }
 
-function createFeaturedProjectGallery(project: (typeof featuredTrustyProjects)[number], photos: string[]): Project[] {
-  return photos.map((image, index) => ({
-    id: `${project.slug}-photo-${index + 1}`,
-    title: index === 0 ? project.title : `${project.title} Photo ${index + 1}`,
+function fetchTrustyPage(url: string) {
+  return fetchPage(url);
+}
+
+function createFeaturedProjectGallery(project: (typeof featuredTrustyProjects)[number], photos: string[]): Project {
+  const images = photos.length ? photos : [getRoyaltyFreeImage(project.projectType, 0)];
+
+  return {
+    id: project.slug,
+    title: project.title,
     href: project.url,
-    image,
+    image: images[0],
     imageSource: "Actual Trusty project photo",
     date: "October 2025",
     city: project.city,
     projectType: project.projectType,
     products: project.products,
-    photoCount: photos.length
-  }));
+    photoCount: images.length,
+    photos: images,
+    description: `${project.title} project photos pulled from the public Trusty / CompanyCam project page.`
+  };
+}
+
+function extractShowcaseProjects(html: string): Project[] {
+  const json = html.match(/<script id="projectShowcases" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
+
+  if (!json) {
+    return [];
+  }
+
+  try {
+    const showcases = JSON.parse(json) as ShowcaseProject[];
+
+    return showcases.map((showcase, index) => {
+      const title = cleanText(showcase.title) || `ASAP Fence & Gates Project ${index + 1}`;
+      const service = cleanText(showcase.service) || inferProjectType(title);
+      const description = cleanText(showcase.detailed_description || showcase.subtitle);
+      const photos = normalizePhotos(showcase.photos, showcase.featured_photo, service, index);
+
+      return {
+        id: showcase.url_slug || showcase.id || `showcase-${index + 1}`,
+        title,
+        href: showcase.url_slug ? `${ASAP_SHOWCASES_URL}?id=${showcase.url_slug}` : ASAP_SHOWCASES_URL,
+        image: photos[0],
+        imageSource: "Actual public ASAP showcase photo",
+        date: cleanText(showcase.project_date) || "Recent Project",
+        city: cleanText(showcase.formatted_location || showcase.location)?.replace(", US", "") || inferCity(`${title} ${description}`),
+        projectType: service,
+        products: inferProducts(`${title} ${service} ${description}`),
+        photoCount: photos.length,
+        photos,
+        description,
+        reviewerName: cleanText(showcase.reviewer_name),
+        reviewRating: cleanText(showcase.review_rating),
+        reviewBody: cleanText(showcase.review_body)
+      };
+    });
+  } catch {
+    return [];
+  }
 }
 
 function extractProjects(html: string): Project[] {
@@ -224,11 +309,36 @@ function extractProjects(html: string): Project[] {
       city: inferCity(`${title} ${slug}`),
       projectType: inferProjectType(title),
       products,
-      photoCount: Number(title.match(/^(\d+)/)?.[1] ?? products.length + 5)
+      photoCount: Number(title.match(/^(\d+)/)?.[1] ?? products.length + 5),
+      photos: [getRoyaltyFreeImage(inferProjectType(title), projects.length)]
     });
   }
 
   return projects;
+}
+
+function normalizePhotos(photos: string[] | undefined, featuredPhoto: string | undefined, projectType: string, index: number) {
+  const projectPhotos = [...new Set([featuredPhoto, ...(photos ?? [])].filter(isValidImageUrl))];
+
+  return projectPhotos.length ? projectPhotos : [getRoyaltyFreeImage(projectType, index)];
+}
+
+function isValidImageUrl(url: string | undefined): url is string {
+  return typeof url === "string" && isImageUrl(url);
+}
+
+function isImageUrl(url: string) {
+  return /\.(png|jpe?g|webp|gif)(\?|$)/i.test(url);
+}
+
+function cleanText(value: string | undefined) {
+  return value
+    ?.replace(/<[^>]*>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, "\"")
+    .replace(/&#x27;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function extractImages(html: string) {

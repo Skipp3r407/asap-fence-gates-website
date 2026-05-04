@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "img.companycam.com"
+      },
+      {
+        protocol: "https",
+        hostname: "landing-page-app-hero-images.s3.amazonaws.com"
       }
     ]
   }

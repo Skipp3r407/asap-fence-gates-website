@@ -312,9 +312,20 @@ export function Header() {
 }
 
 export function Footer() {
+  const quickLinks = [
+    { label: "Home", href: "/" },
+    { label: "Fence Builder Tool", href: "/fence-builder" },
+    { label: "ASAP Financing Options", href: "https://asapfenceandgate.com/asap-financing-options/", external: true },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Testimonials", href: "/testimonials" },
+    { label: "Privacy Policy", href: "https://asapfenceandgate.com/privacy-policy/", external: true },
+    { label: "Terms and Conditions", href: "/terms-and-conditions" },
+    { label: "Sitemap", href: "https://asapfenceandgate.com/sitemap_index.xml", external: true }
+  ];
+
   return (
     <footer className="bg-[#071427] py-16 text-white">
-      <div className="container-xl grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
+      <div className="container-xl grid gap-10 lg:grid-cols-[1.15fr_0.75fr_0.85fr_0.9fr]">
         <div>
           <Logo inverse />
           <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300">
@@ -341,9 +352,38 @@ export function Footer() {
           </div>
         </div>
         <div>
-          <h3 className="text-lg font-black">Service Areas</h3>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {serviceAreas.map((area) => (
+          <h3 className="text-lg font-black text-[#f59f22]">Quicklinks</h3>
+          <div className="mt-4 grid gap-2 text-sm text-slate-300">
+            {quickLinks.map((link) =>
+              link.external ? (
+                <a className="group inline-flex items-center gap-2 hover:text-[#f59f22]" href={link.href} key={link.label} target="_blank" rel="noreferrer">
+                  <span className="h-0 w-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-[#f59f22] transition group-hover:border-l-white" />
+                  {link.label}
+                </a>
+              ) : (
+                <Link className="group inline-flex items-center gap-2 hover:text-[#f59f22]" href={link.href} key={link.label}>
+                  <span className="h-0 w-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-[#f59f22] transition group-hover:border-l-white" />
+                  {link.label}
+                </Link>
+              )
+            )}
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-black text-[#f59f22]">Our Locations</h3>
+          <div className="mt-4 grid gap-4 text-sm leading-7 text-slate-300">
+            <p>
+              <span className="block font-black text-white">Bradenton Office</span>
+              {company.addressBradenton}
+            </p>
+            <p>
+              <span className="block font-black text-white">Orlando Area Office</span>
+              {company.addressOrlandoArea}
+            </p>
+          </div>
+          <h4 className="mt-6 text-sm font-black uppercase tracking-[0.16em] text-slate-400">Service Areas</h4>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {serviceAreas.slice(0, 10).map((area) => (
               <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300" key={area}>
                 {area}
               </span>

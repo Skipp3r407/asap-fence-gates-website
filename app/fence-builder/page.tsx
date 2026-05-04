@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Monitor, Phone } from "lucide-react";
+import { Monitor, Phone } from "lucide-react";
+import { FenceBuilderTool } from "./fence-builder-tool";
 import { FinalCta, SimplePageHero } from "@/components/home-sections";
 import { company, processSteps, services } from "@/lib/site-data";
 
@@ -19,6 +20,7 @@ export default function FenceBuilderPage() {
         title="Plan your fence before you call."
         text="ASAP Fence & Gates offers a desktop-friendly online fence builder so homeowners, property managers, and contractors can think through layout, fence type, gates, and project scope before requesting an estimate."
       />
+      <FenceBuilderTool />
       <section className="py-16">
         <div className="container-xl grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] shadow-2xl shadow-blue-950/15">
@@ -43,14 +45,6 @@ export default function FenceBuilderPage() {
               professional guidance on material choices, gates, permits, property line questions, and utility checks.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#f59f22] px-7 py-4 font-black text-[#071427] shadow-lg shadow-amber-500/25"
-                href={company.fenceBuilderUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Try Fence Builder Tool <ExternalLink className="h-4 w-4" />
-              </a>
               <a
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0b3b75] px-7 py-4 font-black text-white"
                 href={company.bradentonHref}
