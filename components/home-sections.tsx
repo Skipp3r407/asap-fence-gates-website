@@ -1042,7 +1042,7 @@ export function TestimonialsSection() {
 export function OnlineReviewsSection() {
   const [reviews, setReviews] = useState<ReviewCard[]>(onlineReviewHighlights);
   const [activeReview, setActiveReview] = useState<ReviewCard | null>(null);
-  const [reviewStatus, setReviewStatus] = useState("Checking latest Google review info...");
+  const [reviewStatus, setReviewStatus] = useState("Checking the latest public review highlights...");
 
   useEffect(() => {
     let mounted = true;
@@ -1065,11 +1065,11 @@ export function OnlineReviewsSection() {
           setReviews(data.reviews);
           setReviewStatus(`Updated from Google on ${new Date(data.updatedAt ?? Date.now()).toLocaleDateString()}`);
         } else {
-          setReviewStatus("Live Google reviews ready when Places API credentials are configured.");
+          setReviewStatus("Showing published Google review highlights from ASAP Fence & Gates customers.");
         }
       } catch {
         if (mounted) {
-          setReviewStatus("Showing curated public review highlights.");
+          setReviewStatus("Showing published Google review highlights from ASAP Fence & Gates customers.");
         }
       }
     }
