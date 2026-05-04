@@ -2,8 +2,28 @@ import { NextResponse } from "next/server";
 
 const TRUSTY_PORTFOLIO_URL = "https://trusty.app/companies/asap-fence-gates-llc";
 const DURAFENCE_PROJECT_URL = `${TRUSTY_PORTFOLIO_URL}/durafence-installation-with-estate-gate`;
+const LAKEWOOD_ALUMINUM_PROJECT_URL = `${TRUSTY_PORTFOLIO_URL}/3-rail-black-aluminum-in-lakewood-ranches`;
 const MONTHS =
   "January|February|March|April|May|June|July|August|September|October|November|December";
+
+const featuredTrustyProjects = [
+  {
+    slug: "durafence-installation-with-estate-gate",
+    url: DURAFENCE_PROJECT_URL,
+    title: "Durafence Installation With Estate Gate",
+    city: "Bradenton, FL",
+    projectType: "Estate Gates Installation",
+    products: ["Durafence", "Durafence Installation", "Estate Gates Installation"]
+  },
+  {
+    slug: "3-rail-black-aluminum-in-lakewood-ranches",
+    url: LAKEWOOD_ALUMINUM_PROJECT_URL,
+    title: "3 Rail Black Aluminum In Lakewood Ranches",
+    city: "Bradenton, FL",
+    projectType: "Aluminum Fence Installation",
+    products: ["3 Rail Aluminum Fence", "Aluminum Fence Installation"]
+  }
+];
 
 type Project = {
   id: string;
@@ -112,30 +132,33 @@ const fallbackProjects: Project[] = [
 
 export async function GET() {
   try {
-    const [portfolioHtml, durafenceHtml] = await Promise.all([
+    const [portfolioHtml, ...featuredProjectHtml] = await Promise.all([
       fetchTrustyPage(TRUSTY_PORTFOLIO_URL),
-      fetchTrustyPage(DURAFENCE_PROJECT_URL)
+      ...featuredTrustyProjects.map((project) => fetchTrustyPage(project.url))
     ]);
 
-    const projects = extractProjects(portfolioHtml).filter((project) => project.id !== "durafence-installation-with-estate-gate");
+    const featuredSlugs = new Set(featuredTrustyProjects.map((project) => project.slug));
+    const projects = extractProjects(portfolioHtml).filter((project) => !featuredSlugs.has(project.id));
     const portfolioImages = extractImages(portfolioHtml);
-    const durafencePhotos = extractImages(durafenceHtml);
-    const durafenceGallery = createDurafenceGallery(durafencePhotos);
-    const hydratedProjects = projects.slice(0, 155).map((project, index) => ({
+    const featuredGalleries = featuredProjectHtml.flatMap((html, index) =>
+      createFeaturedProjectGallery(featuredTrustyProjects[index], extractImages(html))
+    );
+    const featuredPhotoCount = featuredGalleries.length;
+    const hydratedProjects = projects.slice(0, 164 - featuredPhotoCount).map((project, index) => ({
       ...project,
       image: portfolioImages.length ? portfolioImages[index % portfolioImages.length] : getRoyaltyFreeImage(project.projectType, index),
       imageSource: portfolioImages.length ? "Actual public CompanyCam project photo" : "Royalty-free fallback inspiration"
     }));
-    const galleryProjects = [...durafenceGallery, ...hydratedProjects];
+    const galleryProjects = [...featuredGalleries, ...hydratedProjects];
 
     return NextResponse.json({
       source: TRUSTY_PORTFOLIO_URL,
-      featuredSource: DURAFENCE_PROJECT_URL,
+      featuredSources: featuredTrustyProjects.map((project) => project.url),
       updatedAt: new Date().toISOString(),
       totalProjects: galleryProjects.length || fallbackProjects.length,
-      totalImages: durafencePhotos.length + portfolioImages.length || royaltyFreeFallbackImages.length,
-      featuredPhotoCount: durafencePhotos.length,
-      imageMode: durafencePhotos.length || portfolioImages.length ? "actual-project-photos" : "royalty-free-fallbacks",
+      totalImages: featuredPhotoCount + portfolioImages.length || royaltyFreeFallbackImages.length,
+      featuredPhotoCount,
+      imageMode: featuredPhotoCount || portfolioImages.length ? "actual-project-photos" : "royalty-free-fallbacks",
       projects: galleryProjects.length ? galleryProjects : fallbackProjects
     });
   } catch {
@@ -158,17 +181,17 @@ function fetchTrustyPage(url: string) {
   }).then((response) => response.text());
 }
 
-function createDurafenceGallery(photos: string[]): Project[] {
+function createFeaturedProjectGallery(project: (typeof featuredTrustyProjects)[number], photos: string[]): Project[] {
   return photos.map((image, index) => ({
-    id: `durafence-installation-with-estate-gate-photo-${index + 1}`,
-    title: index === 0 ? "Durafence Installation With Estate Gate" : `Durafence Estate Gate Project Photo ${index + 1}`,
-    href: DURAFENCE_PROJECT_URL,
+    id: `${project.slug}-photo-${index + 1}`,
+    title: index === 0 ? project.title : `${project.title} Photo ${index + 1}`,
+    href: project.url,
     image,
     imageSource: "Actual Trusty project photo",
     date: "October 2025",
-    city: "Bradenton, FL",
-    projectType: "Estate Gates Installation",
-    products: ["Durafence", "Durafence Installation", "Estate Gates Installation"],
+    city: project.city,
+    projectType: project.projectType,
+    products: project.products,
     photoCount: photos.length
   }));
 }

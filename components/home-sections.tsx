@@ -610,7 +610,7 @@ export function GalleryPreview() {
           setProjects(data.projects);
           setGalleryStatus(
             data.imageMode === "actual-project-photos"
-              ? `Showing ${data.featuredPhotoCount ?? 0} actual Durafence project photos from Trusty, plus ${Math.max((data.totalProjects ?? data.projects.length) - (data.featuredPhotoCount ?? 0), 0)} public ASAP Fence & Gates project cards.`
+              ? `Showing ${data.featuredPhotoCount ?? 0} actual Trusty project photos, plus ${Math.max((data.totalProjects ?? data.projects.length) - (data.featuredPhotoCount ?? 0), 0)} public ASAP Fence & Gates project cards.`
               : `Showing ${data.totalProjects ?? data.projects.length} public ASAP Fence & Gates projects with verified royalty-free image fallbacks.`
           );
         } else {
