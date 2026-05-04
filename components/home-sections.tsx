@@ -1018,21 +1018,21 @@ export function FaqSection() {
         <div className="mt-10 grid gap-3">
           {faqs.map((faq, index) => (
             <div
-              className={`overflow-hidden rounded-3xl border bg-white transition ${
-                open === index ? "border-[#f59f22] shadow-lg shadow-amber-500/10" : "border-slate-200"
+              className={`overflow-hidden rounded-3xl border transition ${
+                open === index ? "border-[#f59f22] bg-[#f59f22] shadow-lg shadow-amber-500/20" : "border-slate-200 bg-white"
               }`}
               key={faq.question}
             >
               <button
                 className={`flex w-full items-center justify-between gap-4 p-5 text-left font-black transition ${
-                  open === index ? "bg-amber-50 text-[#071427]" : "text-[#071427]"
+                  open === index ? "bg-[#f59f22] text-[#071427]" : "text-[#071427]"
                 }`}
                 onClick={() => setOpen(open === index ? -1 : index)}
               >
                 {faq.question}
-                <ChevronDown className={`h-5 w-5 transition ${open === index ? "rotate-180 text-[#f59f22]" : ""}`} />
+                <ChevronDown className={`h-5 w-5 transition ${open === index ? "rotate-180 text-[#071427]" : ""}`} />
               </button>
-              {open === index ? <p className="px-5 pb-5 pt-4 leading-7 text-slate-600">{faq.answer}</p> : null}
+              {open === index ? <p className="bg-[#f59f22] px-5 pb-5 pt-4 font-semibold leading-7 text-[#071427]">{faq.answer}</p> : null}
             </div>
           ))}
         </div>
