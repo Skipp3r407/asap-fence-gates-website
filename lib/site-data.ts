@@ -273,7 +273,7 @@ export const galleryImages = [
   {
     title: "Vinyl privacy fence",
     category: "Residential privacy",
-    src: "https://images.unsplash.com/photo-1604014237744-0f9917e219c4?auto=format&fit=crop&w=1600&q=90"
+    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90"
   },
   {
     title: "Aluminum pool fencing",

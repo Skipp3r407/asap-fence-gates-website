@@ -23,7 +23,7 @@ export default function FenceBuilderPage() {
         <div className="container-xl grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] shadow-2xl shadow-blue-950/15">
             <Image
-              src="https://images.unsplash.com/photo-1596825203509-04faae1cc09c?auto=format&fit=crop&w=1400&q=85"
+              src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=85"
               alt="Fence planning and property layout inspiration"
               fill
               sizes="(max-width: 1024px) 100vw, 45vw"

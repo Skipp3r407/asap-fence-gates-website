@@ -17,9 +17,9 @@ type Project = {
 };
 
 const fallbackImages = [
-  "https://img.companycam.com/H_hE7-hHQ5HsegWQ6br1SYdIsbNKRs1eIO2NWXvwpj8/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21wYW55Y2FtLXBlbmRpbmcuczMuYW1hem9uYXdzLmNvbS85ZWM0Njg3NS1kYmFiLTRjNTEtYTI0My0wYTkzMGQ1NWI1ZjMuanBn.jpg",
-  "https://img.companycam.com/OdSzNwISZYiKCV5fPBP-uB1FnunvuFDDki24aKdw5XE/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21wYW55Y2FtLXBlbmRpbmcuczMuYW1hem9uYXdzLmNvbS82MWEyNDViNC1iMjBmLTQzMGUtYmVmZi0wOTI5MzdiMjI5YjIuanBn.jpg",
-  "https://img.companycam.com/VYSBY5lymh1TLKbquJUX8L0GiGncQNVyvii07ERLXDo/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21wYW55Y2FtLXBlbmRpbmcuczMuYW1hem9uYXdzLmNvbS84OWUxYTIwNC0xOGFlLTQ2ZTktYTI5YS0wMTQzZmU4NDdlYjguanBn.jpg"
+  "https://img.companycam.com/H_hE7-hHQ5HsegWQ6br1SYdIsbNKRs1eIO2NWXvwpj8/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS85ZWM0/Njg3NS1kYmFiLTRj/NTEtYTI0My0wYTkz/MGQ1NWI1ZjMuanBn.jpg",
+  "https://img.companycam.com/OdSzNwISZYiKCV5fPBP-uB1FnunvuFDDki24aKdw5XE/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS82MWEy/NDViNC1iMjBmLTQz/MGUtYmVmZi0wOTI5/MzdiMjI5YjIuanBn.jpg",
+  "https://img.companycam.com/VYSBY5lymh1TLKbquJUX8L0GiGncQNVyvii07ERLXDo/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS84OWUx/YTIwNC0xOGFlLTQ2/ZTktYTI5YS0wMTQz/ZmU4NDdlYjguanBn.jpg"
 ];
 
 const fallbackProjects: Project[] = [
@@ -65,8 +65,8 @@ export async function GET() {
     return NextResponse.json({
       source: TRUSTY_PORTFOLIO_URL,
       updatedAt: new Date().toISOString(),
-      totalProjects: hydratedProjects.length,
-      totalImages: images.length,
+      totalProjects: hydratedProjects.length || fallbackProjects.length,
+      totalImages: images.length || fallbackImages.length,
       projects: hydratedProjects.length ? hydratedProjects : fallbackProjects
     });
   } catch {

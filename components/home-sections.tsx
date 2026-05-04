@@ -148,7 +148,7 @@ export function HeroSection() {
   return (
     <section className="relative isolate overflow-hidden bg-[#071427] text-white">
       <Image
-        src="https://images.unsplash.com/photo-1604014237744-0f9917e219c4?auto=format&fit=crop&w=1800&q=90"
+        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90"
         alt="Clean white fence around a premium Florida property"
         fill
         priority
@@ -328,7 +328,7 @@ export function FenceBuilderPromo() {
             </div>
           </div>
           <div className="relative min-h-80">
-            <Image src="https://images.unsplash.com/photo-1596825203509-04faae1cc09c?auto=format&fit=crop&w=1200&q=85" alt="Modern fence builder planning inspiration" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" />
+            <Image src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=85" alt="Modern fence builder planning inspiration" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" />
           </div>
         </div>
       </div>
