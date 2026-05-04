@@ -891,11 +891,18 @@ export function OnlineReviewsSection() {
               <X className="h-5 w-5" />
             </button>
             <motion.article
-              className="w-full max-w-2xl rounded-[2rem] bg-white p-8 shadow-2xl"
+              className="relative w-full max-w-2xl rounded-[2rem] bg-white p-8 shadow-2xl"
               initial={{ scale: 0.94, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.94, y: 20 }}
             >
+              <button
+                className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full bg-[#071427] text-white shadow-lg shadow-blue-950/20 transition hover:bg-[#f59f22] hover:text-[#071427]"
+                onClick={() => setActiveReview(null)}
+                aria-label="Close review"
+              >
+                <X className="h-5 w-5" />
+              </button>
               <div className="flex gap-1 text-[#f59f22]">
                 {Array.from({ length: 5 }).map((_, starIndex) => (
                   <Star className="h-6 w-6 fill-current" key={starIndex} />
