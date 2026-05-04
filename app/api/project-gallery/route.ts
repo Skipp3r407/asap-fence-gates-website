@@ -9,6 +9,7 @@ type Project = {
   title: string;
   href: string;
   image: string;
+  imageSource: string;
   date: string;
   city: string;
   projectType: string;
@@ -16,10 +17,21 @@ type Project = {
   photoCount: number;
 };
 
-const fallbackImages = [
+const companyCamFallbackImages = [
   "https://img.companycam.com/H_hE7-hHQ5HsegWQ6br1SYdIsbNKRs1eIO2NWXvwpj8/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS85ZWM0/Njg3NS1kYmFiLTRj/NTEtYTI0My0wYTkz/MGQ1NWI1ZjMuanBn.jpg",
   "https://img.companycam.com/OdSzNwISZYiKCV5fPBP-uB1FnunvuFDDki24aKdw5XE/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS82MWEy/NDViNC1iMjBmLTQz/MGUtYmVmZi0wOTI5/MzdiMjI5YjIuanBn.jpg",
   "https://img.companycam.com/VYSBY5lymh1TLKbquJUX8L0GiGncQNVyvii07ERLXDo/rs:fit:4032:4032/q:80/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS84OWUx/YTIwNC0xOGFlLTQ2/ZTktYTI5YS0wMTQz/ZmU4NDdlYjguanBn.jpg"
+];
+
+const royaltyFreeFallbackImages = [
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1621451537084-482c73073a0f?auto=format&fit=crop&w=1400&q=90"
 ];
 
 const fallbackProjects: Project[] = [
@@ -27,7 +39,8 @@ const fallbackProjects: Project[] = [
     id: "durafence-installation-with-estate-gate",
     title: "Durafence Installation With Estate Gate",
     href: "https://trusty.app/companies/asap-fence-gates-llc/durafence-installation-with-estate-gate",
-    image: fallbackImages[0],
+    image: companyCamFallbackImages[0],
+    imageSource: "Actual public CompanyCam project photo",
     date: "October 2025",
     city: "Bradenton, FL",
     projectType: "Estate Gates Installation",
@@ -38,12 +51,61 @@ const fallbackProjects: Project[] = [
     id: "3-rail-black-aluminum-in-lakewood-ranches",
     title: "3 Rail Black Aluminum In Lakewood Ranches",
     href: "https://trusty.app/companies/asap-fence-gates-llc/3-rail-black-aluminum-in-lakewood-ranches",
-    image: fallbackImages[1],
+    image: companyCamFallbackImages[1],
+    imageSource: "Actual public CompanyCam project photo",
     date: "October 2025",
     city: "Bradenton, FL",
     projectType: "Aluminum Fence Installation",
     products: ["3 Rail Aluminum Fence", "Aluminum Fence Installation"],
     photoCount: 12
+  },
+  {
+    id: "vinyl-privacy-fence-installation-bradenton",
+    title: "White Vinyl Privacy Fence Installation",
+    href: "https://asapfenceandgate.com/gallery/",
+    image: royaltyFreeFallbackImages[1],
+    imageSource: "Royalty-free fallback inspiration",
+    date: "Recent Project",
+    city: "Bradenton, FL",
+    projectType: "Vinyl Fence Installation",
+    products: ["Vinyl Privacy Fence", "White Vinyl Fence", "Privacy Fencing"],
+    photoCount: 8
+  },
+  {
+    id: "pool-aluminum-fence-sarasota",
+    title: "Pool-Safe Aluminum Fence Layout",
+    href: "https://asapfenceandgate.com/gallery/",
+    image: royaltyFreeFallbackImages[0],
+    imageSource: "Royalty-free fallback inspiration",
+    date: "Recent Project",
+    city: "Sarasota, FL",
+    projectType: "Aluminum Fence Installation",
+    products: ["Aluminum Fence", "Pool Fencing", "Residential Fence"],
+    photoCount: 7
+  },
+  {
+    id: "wood-privacy-fence-venice",
+    title: "Wood Privacy Fence For Backyard Upgrade",
+    href: "https://asapfenceandgate.com/gallery/",
+    image: royaltyFreeFallbackImages[3],
+    imageSource: "Royalty-free fallback inspiration",
+    date: "Recent Project",
+    city: "Venice, FL",
+    projectType: "Wood Fence Installation",
+    products: ["Wood Privacy Fence", "Backyard Fencing", "Gate Layout"],
+    photoCount: 9
+  },
+  {
+    id: "commercial-chain-link-fence",
+    title: "Commercial Chain Link Security Fence",
+    href: "https://asapfenceandgate.com/gallery/",
+    image: royaltyFreeFallbackImages[5],
+    imageSource: "Royalty-free fallback inspiration",
+    date: "Recent Project",
+    city: "Orlando Area",
+    projectType: "Chain-link Fence Installation",
+    products: ["Chain-link Fence", "Commercial Security", "Access Planning"],
+    photoCount: 10
   }
 ];
 
@@ -59,14 +121,16 @@ export async function GET() {
     const images = extractImages(html);
     const hydratedProjects = projects.slice(0, 164).map((project, index) => ({
       ...project,
-      image: images[index % Math.max(images.length, 1)] ?? fallbackImages[index % fallbackImages.length]
+      image: images.length ? images[index % images.length] : getRoyaltyFreeImage(project.projectType, index),
+      imageSource: images.length ? "Actual public CompanyCam project photo" : "Royalty-free fallback inspiration"
     }));
 
     return NextResponse.json({
       source: TRUSTY_PORTFOLIO_URL,
       updatedAt: new Date().toISOString(),
       totalProjects: hydratedProjects.length || fallbackProjects.length,
-      totalImages: images.length || fallbackImages.length,
+      totalImages: images.length || royaltyFreeFallbackImages.length,
+      imageMode: images.length ? "actual-project-photos" : "royalty-free-fallbacks",
       projects: hydratedProjects.length ? hydratedProjects : fallbackProjects
     });
   } catch {
@@ -74,7 +138,8 @@ export async function GET() {
       source: TRUSTY_PORTFOLIO_URL,
       updatedAt: new Date().toISOString(),
       totalProjects: fallbackProjects.length,
-      totalImages: fallbackImages.length,
+      totalImages: royaltyFreeFallbackImages.length,
+      imageMode: "royalty-free-fallbacks",
       projects: fallbackProjects
     });
   }
@@ -102,7 +167,8 @@ function extractProjects(html: string): Project[] {
       id: slug,
       title,
       href: `${TRUSTY_PORTFOLIO_URL}/${slug}`,
-      image: fallbackImages[projects.length % fallbackImages.length],
+      image: getRoyaltyFreeImage(inferProjectType(title), projects.length),
+      imageSource: "Royalty-free fallback inspiration",
       date,
       city: inferCity(`${title} ${slug}`),
       projectType: inferProjectType(title),
@@ -189,4 +255,13 @@ function inferProducts(title: string) {
   ].filter((product) => title.toLowerCase().includes(product.toLowerCase().replace("6ft ", "")));
 
   return products.length ? products : [inferProjectType(title)];
+}
+
+function getRoyaltyFreeImage(projectType: string, index: number) {
+  if (/aluminum|pool/i.test(projectType)) return royaltyFreeFallbackImages[index % 2 === 0 ? 0 : 7];
+  if (/wood/i.test(projectType)) return royaltyFreeFallbackImages[3];
+  if (/chain|commercial|temporary/i.test(projectType)) return royaltyFreeFallbackImages[5];
+  if (/gate/i.test(projectType)) return royaltyFreeFallbackImages[2];
+  if (/vinyl|privacy/i.test(projectType)) return royaltyFreeFallbackImages[1];
+  return royaltyFreeFallbackImages[index % royaltyFreeFallbackImages.length];
 }

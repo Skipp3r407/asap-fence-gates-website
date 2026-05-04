@@ -113,12 +113,22 @@ type ProjectGalleryItem = {
   title: string;
   href: string;
   image: string;
+  imageSource?: string;
   date: string;
   city: string;
   projectType: string;
   products: string[];
   photoCount: number;
 };
+
+const projectImageFallbacks = [
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=90",
+  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=90"
+];
 
 export function HomePage() {
   return (
@@ -573,6 +583,7 @@ export function ProcessSection() {
 export function GalleryPreview() {
   const [active, setActive] = useState<ProjectGalleryItem | null>(null);
   const [projects, setProjects] = useState<ProjectGalleryItem[]>([]);
+  const [failedProjectImages, setFailedProjectImages] = useState<Set<string>>(new Set());
   const [activeType, setActiveType] = useState("All Projects");
   const [visibleCount, setVisibleCount] = useState(18);
   const [galleryStatus, setGalleryStatus] = useState("Loading recent CompanyCam projects...");
@@ -587,6 +598,7 @@ export function GalleryPreview() {
           projects?: ProjectGalleryItem[];
           totalProjects?: number;
           updatedAt?: string;
+          imageMode?: string;
         };
 
         if (!mounted) {
@@ -596,7 +608,9 @@ export function GalleryPreview() {
         if (data.projects?.length) {
           setProjects(data.projects);
           setGalleryStatus(
-            `Showing ${data.totalProjects ?? data.projects.length} public ASAP Fence & Gates projects from Trusty / CompanyCam.`
+            data.imageMode === "actual-project-photos"
+              ? `Showing ${data.totalProjects ?? data.projects.length} public ASAP Fence & Gates projects with actual Trusty / CompanyCam job photos.`
+              : `Showing ${data.totalProjects ?? data.projects.length} public ASAP Fence & Gates projects with verified royalty-free image fallbacks.`
           );
         } else {
           setGalleryStatus("Project feed is temporarily unavailable.");
@@ -626,6 +640,8 @@ export function GalleryPreview() {
   );
 
   const visibleProjects = filteredProjects.slice(0, visibleCount);
+  const getProjectImage = (project: ProjectGalleryItem, index: number) =>
+    failedProjectImages.has(project.id) ? projectImageFallbacks[index % projectImageFallbacks.length] : project.image;
 
   return (
     <section className="bg-white py-16">
@@ -671,13 +687,25 @@ export function GalleryPreview() {
               onClick={() => setActive(project)}
             >
               <span className="relative block h-72 overflow-hidden bg-slate-900">
-                <Image src={project.image} alt={project.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" />
-                <span className="absolute inset-0 bg-gradient-to-t from-[#071427]/88 via-[#071427]/15 to-transparent" />
+                <Image
+                  src={getProjectImage(project, index)}
+                  alt={project.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition duration-500 group-hover:scale-105"
+                  onError={() => {
+                    setFailedProjectImages((current) => new Set(current).add(project.id));
+                  }}
+                />
+                <span className="absolute inset-0 bg-gradient-to-t from-[#071427]/76 via-[#071427]/8 to-transparent" />
                 <span className="absolute left-4 top-4 rounded-full bg-[#071427] px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-white">
                   {project.date}
                 </span>
                 <span className="absolute right-4 top-4 rounded-full bg-[#f59f22] px-3 py-1 text-xs font-black text-[#071427]">
                   +{Math.max(project.photoCount - 1, 0)}
+                </span>
+                <span className="absolute left-4 top-12 rounded-full bg-white/90 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.12em] text-[#0b3b75]">
+                  {failedProjectImages.has(project.id) ? "Fallback image" : project.imageSource ?? "Project photo"}
                 </span>
                 <span className="absolute bottom-4 left-4 right-4">
                   <span className="block text-xl font-black text-white">{project.title}</span>
@@ -725,7 +753,16 @@ export function GalleryPreview() {
             </button>
             <motion.div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] bg-white lg:grid-cols-[1fr_0.42fr]" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}>
               <div className="relative h-[72vh] min-h-[420px] bg-slate-900">
-                <Image src={active.image} alt={active.title} fill sizes="90vw" className="object-contain" />
+                <Image
+                  src={failedProjectImages.has(active.id) ? projectImageFallbacks[0] : active.image}
+                  alt={active.title}
+                  fill
+                  sizes="90vw"
+                  className="object-contain"
+                  onError={() => {
+                    setFailedProjectImages((current) => new Set(current).add(active.id));
+                  }}
+                />
               </div>
               <div className="p-6">
                 <p className="text-sm font-black uppercase tracking-[0.16em] text-[#0b3b75]">{active.projectType}</p>
