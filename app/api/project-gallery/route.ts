@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 const TRUSTY_PORTFOLIO_URL = "https://trusty.app/companies/asap-fence-gates-llc";
+const DURAFENCE_PROJECT_URL = `${TRUSTY_PORTFOLIO_URL}/durafence-installation-with-estate-gate`;
 const MONTHS =
   "January|February|March|April|May|June|July|August|September|October|November|December";
 
@@ -38,7 +39,7 @@ const fallbackProjects: Project[] = [
   {
     id: "durafence-installation-with-estate-gate",
     title: "Durafence Installation With Estate Gate",
-    href: "https://trusty.app/companies/asap-fence-gates-llc/durafence-installation-with-estate-gate",
+    href: DURAFENCE_PROJECT_URL,
     image: companyCamFallbackImages[0],
     imageSource: "Actual public CompanyCam project photo",
     date: "October 2025",
@@ -111,27 +112,31 @@ const fallbackProjects: Project[] = [
 
 export async function GET() {
   try {
-    const html = await fetch(TRUSTY_PORTFOLIO_URL, {
-      next: {
-        revalidate: 3600
-      }
-    }).then((response) => response.text());
+    const [portfolioHtml, durafenceHtml] = await Promise.all([
+      fetchTrustyPage(TRUSTY_PORTFOLIO_URL),
+      fetchTrustyPage(DURAFENCE_PROJECT_URL)
+    ]);
 
-    const projects = extractProjects(html);
-    const images = extractImages(html);
-    const hydratedProjects = projects.slice(0, 164).map((project, index) => ({
+    const projects = extractProjects(portfolioHtml).filter((project) => project.id !== "durafence-installation-with-estate-gate");
+    const portfolioImages = extractImages(portfolioHtml);
+    const durafencePhotos = extractImages(durafenceHtml);
+    const durafenceGallery = createDurafenceGallery(durafencePhotos);
+    const hydratedProjects = projects.slice(0, 155).map((project, index) => ({
       ...project,
-      image: images.length ? images[index % images.length] : getRoyaltyFreeImage(project.projectType, index),
-      imageSource: images.length ? "Actual public CompanyCam project photo" : "Royalty-free fallback inspiration"
+      image: portfolioImages.length ? portfolioImages[index % portfolioImages.length] : getRoyaltyFreeImage(project.projectType, index),
+      imageSource: portfolioImages.length ? "Actual public CompanyCam project photo" : "Royalty-free fallback inspiration"
     }));
+    const galleryProjects = [...durafenceGallery, ...hydratedProjects];
 
     return NextResponse.json({
       source: TRUSTY_PORTFOLIO_URL,
+      featuredSource: DURAFENCE_PROJECT_URL,
       updatedAt: new Date().toISOString(),
-      totalProjects: hydratedProjects.length || fallbackProjects.length,
-      totalImages: images.length || royaltyFreeFallbackImages.length,
-      imageMode: images.length ? "actual-project-photos" : "royalty-free-fallbacks",
-      projects: hydratedProjects.length ? hydratedProjects : fallbackProjects
+      totalProjects: galleryProjects.length || fallbackProjects.length,
+      totalImages: durafencePhotos.length + portfolioImages.length || royaltyFreeFallbackImages.length,
+      featuredPhotoCount: durafencePhotos.length,
+      imageMode: durafencePhotos.length || portfolioImages.length ? "actual-project-photos" : "royalty-free-fallbacks",
+      projects: galleryProjects.length ? galleryProjects : fallbackProjects
     });
   } catch {
     return NextResponse.json({
@@ -143,6 +148,29 @@ export async function GET() {
       projects: fallbackProjects
     });
   }
+}
+
+function fetchTrustyPage(url: string) {
+  return fetch(url, {
+    next: {
+      revalidate: 3600
+    }
+  }).then((response) => response.text());
+}
+
+function createDurafenceGallery(photos: string[]): Project[] {
+  return photos.map((image, index) => ({
+    id: `durafence-installation-with-estate-gate-photo-${index + 1}`,
+    title: index === 0 ? "Durafence Installation With Estate Gate" : `Durafence Estate Gate Project Photo ${index + 1}`,
+    href: DURAFENCE_PROJECT_URL,
+    image,
+    imageSource: "Actual Trusty project photo",
+    date: "October 2025",
+    city: "Bradenton, FL",
+    projectType: "Estate Gates Installation",
+    products: ["Durafence", "Durafence Installation", "Estate Gates Installation"],
+    photoCount: photos.length
+  }));
 }
 
 function extractProjects(html: string): Project[] {
