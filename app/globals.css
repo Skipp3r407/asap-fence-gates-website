@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f9fc;
+  --foreground: #08111f;
+  --brand-blue: #0b3b75;
+  --brand-navy: #071427;
+  --brand-accent: #f59f22;
+  --brand-sky: #d9ebff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--brand-accent) var(--brand-navy);
+  scrollbar-width: thin;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(36, 105, 177, 0.14), transparent 30rem),
+    linear-gradient(180deg, #ffffff 0%, var(--background) 42%, #ffffff 100%);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+@media (pointer: fine) {
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    cursor: none;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  a:not([class*="bg-"]):hover {
+    color: var(--brand-accent);
+  }
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: var(--brand-accent);
+  color: var(--brand-navy);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--brand-navy);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid var(--brand-navy);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--brand-accent), #ffbd56);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffbd56, var(--brand-accent));
+}
+
+.container-xl {
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.metal-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.fence-pattern {
+  background-image:
+    linear-gradient(90deg, rgba(11, 59, 117, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(11, 59, 117, 0.08) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+.glass-card {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 24px 80px rgba(8, 17, 31, 0.13);
+  backdrop-filter: blur(18px);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+@keyframes logo-grow {
+  0% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  82% {
+    opacity: 1;
+    transform: scale(1.44);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.52);
+  }
+}
+
+@keyframes load-bar {
+  0% {
+    transform: scaleX(0);
+  }
+
+  75% {
+    transform: scaleX(0.88);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
