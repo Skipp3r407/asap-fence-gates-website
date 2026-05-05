@@ -18,6 +18,8 @@ import { useEffect, useMemo, useState } from "react";
 import {
   company,
   faqs,
+  homeSpotlightCopy,
+  homeSpotlightMedia,
   mapLocations,
   onlineReviewHighlights,
   processSteps,
@@ -232,6 +234,7 @@ export function HomePage() {
       <WhyChooseSection />
       <RepairReplacementSection />
       <ProcessSection />
+      <WhatWeDoVideoExpertSection />
       <GalleryPreview />
       <OnlineReviewsSection />
       <TestimonialsSection />
@@ -399,6 +402,74 @@ export function ServicesGrid() {
               </Link>
             </motion.article>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function WhatWeDoVideoExpertSection() {
+  const wistiaEmbedSrc = `https://fast.wistia.net/embed/iframe/${homeSpotlightMedia.fenceEstimatorWistiaId}?seo=false&videoFoam=true`;
+
+  return (
+    <section className="bg-white py-16">
+      <div className="container-xl">
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+          <article className="rounded-2xl bg-[#0b3b75] p-8 text-center text-white shadow-xl shadow-blue-950/25 lg:p-10">
+            <h2 className="text-2xl font-black md:text-3xl">{homeSpotlightCopy.whatWeDoHeading}</h2>
+            <p className="mt-5 text-lg font-semibold leading-relaxed">{homeSpotlightCopy.whatWeDoBody}</p>
+            <p className="mt-6 text-xl font-black">
+              Call Us Today at{" "}
+              <a className="underline decoration-white/40 underline-offset-4 hover:text-[#f59f22]" href={company.bradentonHref}>
+                {company.bradentonPhone}
+              </a>
+            </p>
+            <a
+              className="mt-6 inline-block rounded-lg bg-[#e53935] px-10 py-4 text-sm font-black uppercase tracking-wide text-white shadow-lg transition hover:bg-[#c62828]"
+              href={company.bradentonHref}
+            >
+              CLICK TO CALL
+            </a>
+          </article>
+
+          <div className="flex flex-col gap-4">
+            <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-xl shadow-blue-950/15">
+              <iframe
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                src={wistiaEmbedSrc}
+                title="ASAP Fence & Gates fence price estimator how-to video"
+              />
+            </div>
+            <Link
+              className="inline-flex w-full items-center justify-center rounded-lg bg-[#e53935] px-6 py-4 text-center font-black text-white shadow-md transition hover:bg-[#c62828] sm:w-auto"
+              href="/fence-builder"
+            >
+              Try Our Online Fence Builder Tool (Desktop Only)
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-14 grid items-center gap-10 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-14">
+          <div className="relative mx-auto flex max-w-[300px] justify-center lg:mx-0 lg:max-w-none">
+            <Image
+              alt="ASAP Fence & Gates fencing expert"
+              className="h-auto w-full max-w-[300px] object-contain drop-shadow-lg lg:max-w-[340px]"
+              height={1024}
+              src={homeSpotlightMedia.expertPortraitSrc}
+              width={1024}
+              sizes="(max-width: 1024px) 280px, 340px"
+              priority={false}
+            />
+          </div>
+          <div>
+            <h2 className="text-3xl font-black tracking-tight text-[#071427] md:text-4xl">{homeSpotlightCopy.expertHeading}</h2>
+            <p className="mt-6 leading-8 text-slate-700">{homeSpotlightCopy.expertLead}</p>
+            <p className="mt-5 leading-8 text-slate-700">{homeSpotlightCopy.expertClosing}</p>
+          </div>
         </div>
       </div>
     </section>

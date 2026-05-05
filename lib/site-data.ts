@@ -39,6 +39,24 @@ export const company = {
   priceRange: "$$"
 };
 
+/** Pulled from live homepage markup at asapfenceandgate.com (Wistia + WP uploads). */
+export const homeSpotlightMedia = {
+  fenceEstimatorWistiaId: "py5ytotlsn",
+  expertPortraitSrc:
+    "https://asapfenceandgate.com/wp-content/uploads/2022/04/Smiling-Arms-Crossed-1024x1024.png"
+};
+
+export const homeSpotlightCopy = {
+  whatWeDoHeading: "What We Do",
+  whatWeDoBody:
+    "We Install Up To 750/ft Per Day of Vinyl Privacy Fence In HOA's, Commercial Properties, & For Homeowners.",
+  expertHeading: "Expert Fence & Gate Fabrication & Repairs",
+  expertLead:
+    "Your trusted fence and gate installation company for commercial, residential, industrial, and agricultural fences. We offer all types of fences and fence materials. In addition, we offer gates, automatic gates, electric gates, and more. We provide privacy fencing of all types: privacy fencing, commercial fences, construction fences, and temporary fences. We proudly serve all Sarasota and Manatee Counties.",
+  expertClosing:
+    "As homeowners and business owners ourselves, we've all had the same concerns: Will I choose the right company? Will they show up late or overcharge me for sub-par work? At ASAP Fence and Gates, we never let that happen. When you call, a licensed and insured expert will arrive at your door on time, listen to your needs, and provide the right solution at a price you can agree on. Don't delay—reach out to us today."
+};
+
 export const navItems = [
   { label: "Services", href: "/services" },
   { label: "Gallery", href: "/gallery" },
