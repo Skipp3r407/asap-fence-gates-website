@@ -18,6 +18,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   company,
   faqs,
+  fenceCompanyBenefits,
+  homeMaterialsAboutCopy,
+  homeMaterialsAboutMedia,
   homeSpotlightCopy,
   homeSpotlightMedia,
   mapLocations,
@@ -53,25 +56,6 @@ const serviceAreaImages: Record<string, string> = {
   "Charlotte County": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=85",
   "Hillsborough County": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=900&q=85"
 };
-
-const benefits = [
-  {
-    title: "Experience and expertise",
-    text: "Fence projects go smoother when the crew understands layout, materials, gates, property conditions, and Florida weather. ASAP helps customers avoid guesswork before installation starts."
-  },
-  {
-    title: "Convenience from start to finish",
-    text: "The team can help with measuring, material recommendations, scheduling, permits, utility checks, and installation details so customers are not managing every step alone."
-  },
-  {
-    title: "A well-installed fence can add value",
-    text: "A clean fence improves privacy, security, curb appeal, and day-to-day use of the property. For homeowners thinking long term, it can also support resale presentation."
-  },
-  {
-    title: "The right fence for the right property",
-    text: "Vinyl, aluminum, wood, chain link, gates, commercial fencing, pool fencing, and privacy layouts all solve different problems. The estimate conversation helps match the right solution."
-  }
-];
 
 const repairReplacementSteps = [
   {
@@ -555,52 +539,31 @@ export function FenceInstallationsSection() {
 }
 
 export function MaterialsAboutSection() {
+  const copy = homeMaterialsAboutCopy;
+
   return (
     <section className="fence-pattern py-16">
-      <div className="container-xl grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <article className="rounded-[2rem] bg-white p-8 shadow-xl shadow-blue-950/10 ring-1 ring-slate-100 md:p-10">
-          <p className="text-sm font-black uppercase tracking-[0.22em] text-[#0b3b75]">Highest quality materials</p>
-          <h2 className="mt-3 text-4xl font-black text-[#071427]">Made to last, priced honestly, and installed cleanly.</h2>
-          <div className="mt-6 space-y-4 leading-7 text-slate-600">
-            <p>
-              The old site emphasized high-quality materials, fair pricing, schedule flexibility, and workmanship backed
-              by a warranty. This rebuild keeps that promise front and center with clearer, more confident messaging.
-            </p>
-            <p>
-              During an estimate, ASAP can review fence type, gate needs, property conditions, budget, and long-term
-              maintenance expectations so customers understand their options before committing.
-            </p>
-          </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            {["Quality materials", "Fair estimates", "Warranty mindset"].map((item) => (
-              <div className="rounded-2xl bg-blue-50 p-4 font-black text-[#0b3b75]" key={item}>
-                {item}
-              </div>
-            ))}
-          </div>
-        </article>
-        <article className="relative overflow-hidden rounded-[2rem] bg-[#071427] p-8 text-white shadow-2xl shadow-blue-950/20 md:p-10">
-          <div className="absolute inset-0 metal-grid opacity-40" />
-          <div className="relative">
-            <p className="text-sm font-black uppercase tracking-[0.22em] text-[#f59f22]">About ASAP</p>
-            <h2 className="mt-3 text-4xl font-black">A full-service fence company for Bradenton and beyond.</h2>
-            <p className="mt-5 leading-7 text-slate-300">
-              ASAP Fence & Gates helps homeowners and businesses choose the right fence or gate for security, privacy,
-              appearance, access, and property value. The team serves residential, commercial, industrial, agricultural,
-              HOA, property manager, and contractor needs.
-            </p>
-            <div className="mt-8 grid gap-3">
-              {[company.addressBradenton, company.addressOrlandoArea, company.email].map((item) => (
-                <div className="rounded-2xl border border-white/10 bg-white/10 p-4 font-bold" key={item}>
-                  {item}
-                </div>
-              ))}
+      <div className="container-xl">
+        <h2 className="text-balance text-3xl font-black tracking-tight text-[#0b3b75] md:text-4xl">{copy.recentWorkHeading}</h2>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <article className="rounded-[2rem] bg-white p-8 shadow-xl shadow-blue-950/10 ring-1 ring-slate-100 md:p-10">
+            <h3 className="text-3xl font-black text-[#071427] md:text-4xl">{copy.materialsHeading}</h3>
+            <div className="mt-6 space-y-4 leading-7 text-slate-600">
+              <p>{copy.materialsP1}</p>
+              <p>{copy.materialsP2Lead}</p>
+              <p>{copy.materialsP2Detail}</p>
             </div>
+          </article>
+          <article className="rounded-[2rem] bg-black p-8 text-white shadow-2xl shadow-black/40 ring-1 ring-black/80 md:p-10">
+            <p className="text-lg font-semibold leading-snug text-white">{copy.aboutTagline}</p>
+            <h3 className="mt-8 text-3xl font-black uppercase tracking-wide text-[#5eb3ff] md:text-4xl">{copy.aboutHeading}</h3>
+            <p className="mt-5 leading-7 text-slate-200">{copy.aboutBody}</p>
             <Link className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#f59f22] px-6 py-3 font-black text-[#071427]" href="/about">
-              Learn About ASAP <ArrowRight className="h-4 w-4" />
+              Learn more <ArrowRight className="h-4 w-4" />
             </Link>
-          </div>
-        </article>
+          </article>
+        </div>
       </div>
     </section>
   );
@@ -613,22 +576,22 @@ export function BenefitsSection() {
         <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[380px]">
             <Image
-              src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1300&q=85"
-              alt="Black aluminum fence around a well maintained Florida property"
+              src={homeMaterialsAboutMedia.benefitsHeroSrc}
+              alt="Aluminum and vinyl fencing near a Florida pool enclosure installed by ASAP Fence & Gates"
               fill
               sizes="(max-width: 1024px) 100vw, 48vw"
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0b3b75]/20" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0b3b75]/25" />
           </div>
           <div className="p-8 md:p-12">
             <p className="text-sm font-black uppercase tracking-[0.22em] text-[#f59f22]">Benefits</p>
-            <h2 className="mt-3 text-4xl font-black">Benefits of working with a fence company.</h2>
+            <h2 className="mt-3 text-4xl font-black text-white">Benefits of working with a fence company.</h2>
             <div className="mt-8 grid gap-4">
-              {benefits.map((benefit) => (
-                <div className="rounded-3xl bg-white/10 p-5 ring-1 ring-white/10" key={benefit.title}>
-                  <h3 className="font-black text-white">{benefit.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-200">{benefit.text}</p>
+              {fenceCompanyBenefits.map((benefit) => (
+                <div className="rounded-3xl bg-white p-5 shadow-lg shadow-black/10 ring-1 ring-white/20" key={benefit.title}>
+                  <h3 className="font-black text-[#071427]">{benefit.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">{benefit.text}</p>
                 </div>
               ))}
             </div>
@@ -826,9 +789,9 @@ export function GalleryPreview() {
       <div className="container-xl">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <SectionHeading
-            eyebrow="Recent Work"
-            title="Real ASAP Fence & Gates project gallery."
-            text="Pulled from the public project portfolio connected to the existing site, including project type, products used, dates, cities, and CompanyCam job photos."
+            eyebrow="Project gallery"
+            title="Browse detailed jobs from the public showcase feed."
+            text="Filter by project type, materials, and city—the same portfolio concept CompanyCam visitors see on the original homepage gallery widget."
           />
           <Link className="inline-flex items-center gap-2 font-black text-[#0b3b75]" href="/gallery">
             View Full Gallery <ArrowRight className="h-4 w-4" />

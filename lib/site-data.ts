@@ -57,6 +57,48 @@ export const homeSpotlightCopy = {
     "As homeowners and business owners ourselves, we've all had the same concerns: Will I choose the right company? Will they show up late or overcharge me for sub-par work? At ASAP Fence and Gates, we never let that happen. When you call, a licensed and insured expert will arrive at your door on time, listen to your needs, and provide the right solution at a price you can agree on. Don't delay—reach out to us today."
 };
 
+/** Background image for Benefits row — Elementor post-377.css (.elementor-element-87cce20). */
+export const homeMaterialsAboutMedia = {
+  benefitsHeroSrc:
+    "https://asapfenceandgate.com/wp-content/uploads/2023/11/84cbeba967c2669420231125-2491-u8lp0c.jpg"
+};
+
+/** Matches asapfenceandgate.com home page Elementor copy (WP REST page 377). */
+export const homeMaterialsAboutCopy = {
+  recentWorkHeading: "Some of our recent work",
+  materialsHeading: "Made from the highest quality materials",
+  materialsP1:
+    "We only use the highest quality materials in our fences, so you can be sure they'll last for years. We have a wide variety of fencing options to choose from, so you're sure to find the perfect fence for your home and budget.",
+  materialsP2Lead:
+    "When homeowners or businesses call us for fence & gate help, they want an upfront pricing estimate, great selection of materials, a schedule that fits their needs and high quality workmanship.",
+  materialsP2Detail:
+    "Upon arriving at your home or business, we will ask you some questions about your fence or gate and then we begin the inspection. We'll give you a detailed estimate with options. We understand you want a fence or gate that is going to last without problems. We offer the highest quality workmanship with a full warranty. Our pricing is fair and honest.",
+  aboutTagline: "Your trusted fence company in Bradenton, Florida and the surrounding areas.",
+  aboutHeading: "ABOUT US",
+  aboutBody:
+    "ASAP Fence and Gates is a full-service fence company that has been providing quality fences to the residents of Bradenton, Florida for years. We offer a wide variety of fencing options, from traditional wood fences to modern metal fences, so you can find the perfect fence for your home or business. We also offer gate installation and repair services, so you can have a safe and secure entrance to your property."
+};
+
+/** Verbatim benefit blurbs from the live homepage (Elementor icon boxes). */
+export const fenceCompanyBenefits = [
+  {
+    title: "Experience and expertise",
+    text: "When it comes to fences, experience and expertise matter. That's why it's important to work with a fence company like ASAP Fence and Gates. We have years of experience installing and repairing fences, so we know exactly what goes into making a good fence."
+  },
+  {
+    title: "Convenience",
+    text: "Another great benefit of working with a fence company is convenience. We'll take care of everything for you, from measuring to installation and repair. You can relax and know that your fence is in good hands."
+  },
+  {
+    title: "A well installed fence can add value to your home.",
+    text: "A well installed fence can add value to your home. Not only does it provide security and peace of mind, but a good fence can also increase the value of your home. If you're thinking about selling your home in the future, a good fence can be the extra edge you need to get top dollar."
+  },
+  {
+    title: "Recommend the best type of fence",
+    text: "Not all fences are created equal. That's why it's important to work with a fence company that can recommend the best type of fence for your specific needs. We have a wide variety of fencing options available, so we're sure to have the perfect fence for your home."
+  }
+];
+
 export const navItems = [
   { label: "Services", href: "/services" },
   { label: "Gallery", href: "/gallery" },
