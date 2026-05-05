@@ -114,9 +114,11 @@ export function Header() {
           </div>
         </div>
       </div>
-      <div className="container-xl flex min-h-44 items-center justify-between gap-6 bg-white py-4">
-        <Logo />
-        <nav className="hidden items-center gap-1 rounded-2xl border border-slate-200/90 bg-white px-2 py-2 text-sm font-black leading-none text-slate-700 shadow-[0_10px_35px_rgba(8,17,31,0.08)] lg:flex">
+      <div className="container-xl grid min-h-44 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 bg-white py-4 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-6">
+        <div className="col-start-1 row-start-1 min-w-0 self-center">
+          <Logo />
+        </div>
+        <nav className="hidden items-center gap-1 rounded-2xl border border-slate-200/90 bg-white px-2 py-2 text-sm font-black leading-none text-slate-700 shadow-[0_10px_35px_rgba(8,17,31,0.08)] lg:col-start-2 lg:row-start-1 lg:flex lg:w-max lg:justify-self-center">
           <div className="group relative">
             <Link
               className={`inline-flex h-10 items-center justify-center gap-1 rounded-xl px-3.5 transition ${
@@ -209,8 +211,8 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
-          <div className="flex items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-[0_10px_30px_rgba(8,17,31,0.08)]">
+        <div className="col-start-2 row-start-1 flex items-center justify-end gap-3 justify-self-end self-center lg:col-start-3 lg:justify-self-end">
+          <div className="hidden items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-[0_10px_30px_rgba(8,17,31,0.08)] lg:flex">
             <a
               className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3.5 text-sm font-black leading-none text-[#0b3b75] transition hover:bg-[#f59f22] hover:text-[#071427]"
               href={company.bradentonHref}
@@ -225,19 +227,19 @@ export function Header() {
             </a>
           </div>
           <Link
-            className="inline-flex h-[52px] items-center justify-center whitespace-nowrap rounded-2xl bg-[#f59f22] px-5 text-sm font-black leading-none text-[#071427] shadow-lg shadow-amber-500/25 transition hover:-translate-y-0.5 hover:bg-[#ffb13d]"
+            className="hidden h-[52px] items-center justify-center whitespace-nowrap rounded-2xl bg-[#f59f22] px-5 text-sm font-black leading-none text-[#071427] shadow-lg shadow-amber-500/25 transition hover:-translate-y-0.5 hover:bg-[#ffb13d] lg:inline-flex"
             href="/contact"
           >
             Request Estimate
           </Link>
+          <button
+            className="grid h-11 w-11 place-items-center rounded-full border border-slate-200 text-[#071427] lg:hidden"
+            onClick={() => setOpen((value) => !value)}
+            aria-label="Toggle navigation"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
-        <button
-          className="grid h-11 w-11 place-items-center rounded-full border border-slate-200 text-[#071427] lg:hidden"
-          onClick={() => setOpen((value) => !value)}
-          aria-label="Toggle navigation"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
       </div>
       {open ? (
         <div className="border-t border-slate-200 bg-white/96 p-5 shadow-2xl backdrop-blur lg:hidden">
